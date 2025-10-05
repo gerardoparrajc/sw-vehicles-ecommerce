@@ -70,8 +70,8 @@ export class StarWarsApiService {
   }
 
   getVehicleById(id: string, type: 'vehicle' | 'starship'): Observable<VehicleWithId | null> {
-    const url = type === 'vehicle' ? 
-      `${this.baseUrl}/vehicles/${id}/` : 
+    const url = type === 'vehicle' ?
+      `${this.baseUrl}/vehicles/${id}/` :
       `${this.baseUrl}/starships/${id}/`;
 
     return this.http.get<Vehicle | Starship>(url).pipe(
@@ -81,7 +81,7 @@ export class StarWarsApiService {
         type,
         image: this.getVehicleImage(vehicle.name, type),
         ...(type === 'vehicle' && { vehicle_class: (vehicle as Vehicle).vehicle_class }),
-        ...(type === 'starship' && { 
+        ...(type === 'starship' && {
           hyperdrive_rating: (vehicle as Starship).hyperdrive_rating,
           MGLT: (vehicle as Starship).MGLT,
           starship_class: (vehicle as Starship).starship_class

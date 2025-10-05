@@ -11,7 +11,7 @@ import { CartService } from '../../core/services/cart.service';
   template: `
     <div class="vehicle-card">
       <div class="card-image">
-        <img 
+        <img
           ngSrc="{{ vehicle.image }}"
           [alt]="vehicle.name"
           width="400"
@@ -24,12 +24,12 @@ import { CartService } from '../../core/services/cart.service';
           {{ vehicle.type === 'starship' ? 'Nave Espacial' : 'Vehículo' }}
         </div>
       </div>
-      
+
       <div class="card-content">
         <h3 class="card-title">{{ vehicle.name }}</h3>
         <p class="card-model">{{ vehicle.model }}</p>
         <p class="card-manufacturer">{{ vehicle.manufacturer }}</p>
-        
+
         <div class="card-specs">
           <div class="spec-item">
             <span class="spec-label">Tripulación:</span>
@@ -44,22 +44,22 @@ import { CartService } from '../../core/services/cart.service';
             <span class="spec-value">{{ vehicle.hyperdrive_rating }}</span>
           </div>
         </div>
-        
+
         <div class="card-price">
           <span class="price-label">Precio:</span>
           <span class="price-value">{{ formatPrice(vehicle.cost_in_credits) }}</span>
         </div>
-        
+
         <div class="card-actions">
-          <button 
+          <button
             [routerLink]="['/vehicle', vehicle.type, vehicle.id]"
             class="btn btn-secondary"
             aria-label="Ver detalles de {{ vehicle.name }}"
           >
             Ver Detalles
           </button>
-          
-          <button 
+
+          <button
             (click)="addToCart()"
             [disabled]="cartService.isLoading()"
             class="btn btn-primary"
@@ -287,12 +287,12 @@ export class VehicleCardComponent {
     if (price === 'unknown' || !price) {
       return '10,000 créditos';
     }
-    
+
     const numericPrice = parseInt(price.replace(/,/g, ''), 10);
     if (isNaN(numericPrice)) {
       return '10,000 créditos';
     }
-    
+
     return `${numericPrice.toLocaleString()} créditos`;
   }
 

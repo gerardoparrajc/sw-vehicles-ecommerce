@@ -48,7 +48,7 @@ import { LoadingComponent } from '../shared/components/loading.component';
             Calidad galáctica garantizada
           </p>
         </div>
-        
+
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-icon">⚡</div>
@@ -57,7 +57,7 @@ import { LoadingComponent } from '../shared/components/loading.component';
               Entrega en menos de 12 parsecs a cualquier sistema solar
             </p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">🛡️</div>
             <h3 class="feature-title">Garantía Imperial</h3>
@@ -65,7 +65,7 @@ import { LoadingComponent } from '../shared/components/loading.component';
               Todos nuestros vehículos cuentan con garantía del Imperio Galáctico
             </p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">💫</div>
             <h3 class="feature-title">Tecnología Avanzada</h3>
@@ -85,8 +85,8 @@ import { LoadingComponent } from '../shared/components/loading.component';
           </p>
         </div>
 
-        <app-loading 
-          *ngIf="isLoading()" 
+        <app-loading
+          *ngIf="isLoading()"
           message="Cargando vehículos destacados..."
         />
 
@@ -95,8 +95,8 @@ import { LoadingComponent } from '../shared/components/loading.component';
           <p>{{ error() }}</p>
         </div>
 
-        <div 
-          *ngIf="!isLoading() && !error() && featuredVehicles().length > 0" 
+        <div
+          *ngIf="!isLoading() && !error() && featuredVehicles().length > 0"
           class="featured-vehicles"
         >
           <app-vehicle-card
@@ -197,7 +197,7 @@ import { LoadingComponent } from '../shared/components/loading.component';
     .stars {
       position: absolute;
       inset: 0;
-      background-image: 
+      background-image:
         radial-gradient(2px 2px at 20px 30px, #eee, transparent),
         radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
         radial-gradient(1px 1px at 90px 40px, #fff, transparent),

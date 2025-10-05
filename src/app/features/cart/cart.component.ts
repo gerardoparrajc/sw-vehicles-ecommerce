@@ -18,8 +18,8 @@ import { LoadingComponent } from '../../shared/components/loading.component';
       </div>
 
       <div class="cart-content">
-        <app-loading 
-          *ngIf="cartService.isLoading()" 
+        <app-loading
+          *ngIf="cartService.isLoading()"
           message="Actualizando carrito..."
         />
 
@@ -38,7 +38,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
           <div class="cart-items">
             <div class="cart-item" *ngFor="let item of cartService.cartItems(); trackBy: trackByItem">
               <div class="item-image">
-                <img 
+                <img
                   ngSrc="{{ item.vehicle.image }}"
                   [alt]="item.vehicle.name"
                   width="120"
@@ -65,7 +65,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
 
               <div class="item-quantity">
                 <div class="quantity-controls">
-                  <button 
+                  <button
                     (click)="decreaseQuantity(item)"
                     [disabled]="cartService.isLoading()"
                     class="quantity-btn"
@@ -74,7 +74,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
                     −
                   </button>
                   <span class="quantity-display">{{ item.quantity }}</span>
-                  <button 
+                  <button
                     (click)="increaseQuantity(item)"
                     [disabled]="cartService.isLoading()"
                     class="quantity-btn"
@@ -91,14 +91,14 @@ import { LoadingComponent } from '../../shared/components/loading.component';
               </div>
 
               <div class="item-actions">
-                <button 
+                <button
                   [routerLink]="['/vehicle', item.vehicle.type, item.vehicle.id]"
                   class="btn btn-link"
                   aria-label="Ver detalles de {{ item.vehicle.name }}"
                 >
                   Ver Detalles
                 </button>
-                <button 
+                <button
                   (click)="removeItem(item)"
                   [disabled]="cartService.isLoading()"
                   class="btn btn-danger"
@@ -121,14 +121,14 @@ import { LoadingComponent } from '../../shared/components/loading.component';
                 <span class="summary-label">Artículos ({{ cartService.itemCount() }}):</span>
                 <span class="summary-value">{{ formatPrice(cartService.totalPrice().toString()) }}</span>
               </div>
-              
+
               <div class="summary-row">
                 <span class="summary-label">Envío:</span>
                 <span class="summary-value shipping-free">GRATIS</span>
               </div>
-              
+
               <div class="summary-separator"></div>
-              
+
               <div class="summary-row total-row">
                 <span class="summary-label">Total:</span>
                 <span class="summary-value total-value">{{ formatPrice(cartService.totalPrice().toString()) }}</span>
@@ -136,15 +136,15 @@ import { LoadingComponent } from '../../shared/components/loading.component';
             </div>
 
             <div class="summary-actions">
-              <button 
+              <button
                 (click)="clearCart()"
                 [disabled]="cartService.isLoading()"
                 class="btn btn-secondary btn-full"
               >
                 Vaciar Carrito
               </button>
-              
-              <button 
+
+              <button
                 (click)="proceedToCheckout()"
                 [disabled]="cartService.isLoading()"
                 class="btn btn-primary btn-full"
@@ -626,12 +626,12 @@ export class CartComponent {
     if (price === 'unknown' || !price) {
       return '10,000 créditos';
     }
-    
+
     const numericPrice = parseInt(price.replace(/,/g, ''), 10);
     if (isNaN(numericPrice)) {
       return '10,000 créditos';
     }
-    
+
     return `${numericPrice.toLocaleString()} créditos`;
   }
 

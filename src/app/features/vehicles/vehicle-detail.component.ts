@@ -13,8 +13,8 @@ import { LoadingComponent } from '../../shared/components/loading.component';
   imports: [CommonModule, RouterModule, LoadingComponent, NgOptimizedImage],
   template: `
     <div class="vehicle-detail-container">
-      <app-loading 
-        *ngIf="isLoading()" 
+      <app-loading
+        *ngIf="isLoading()"
         message="Cargando detalles del vehículo..."
       />
 
@@ -35,7 +35,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
 
         <div class="detail-content">
           <div class="image-section">
-            <img 
+            <img
               ngSrc="{{ vehicle()!.image }}"
               [alt]="vehicle()!.name"
               width="600"
@@ -90,7 +90,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
                   <span class="spec-label">Consumibles:</span>
                   <span class="spec-value">{{ vehicle()!.consumables }}</span>
                 </div>
-                
+
                 <!-- Specs específicos para starships -->
                 <div *ngIf="vehicle()!.type === 'starship' && vehicle()!.hyperdrive_rating" class="spec-item">
                   <span class="spec-label">Clasificación hiperimpulsor:</span>
@@ -104,7 +104,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
                   <span class="spec-label">Clase de nave:</span>
                   <span class="spec-value">{{ vehicle()!.starship_class }}</span>
                 </div>
-                
+
                 <!-- Spec específico para vehicles -->
                 <div *ngIf="vehicle()!.type === 'vehicle' && vehicle()!.vehicle_class" class="spec-item">
                   <span class="spec-label">Clase de vehículo:</span>
@@ -117,7 +117,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
               <div class="quantity-controls" *ngIf="isInCart()">
                 <label class="quantity-label">Cantidad en carrito:</label>
                 <div class="quantity-input-group">
-                  <button 
+                  <button
                     (click)="decreaseQuantity()"
                     [disabled]="cartService.isLoading()"
                     class="quantity-btn"
@@ -126,7 +126,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
                     −
                   </button>
                   <span class="quantity-display">{{ currentQuantity() }}</span>
-                  <button 
+                  <button
                     (click)="increaseQuantity()"
                     [disabled]="cartService.isLoading()"
                     class="quantity-btn"
@@ -138,7 +138,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
               </div>
 
               <div class="action-buttons">
-                <button 
+                <button
                   (click)="addToCart()"
                   [disabled]="cartService.isLoading()"
                   class="btn btn-primary btn-large"
@@ -149,8 +149,8 @@ import { LoadingComponent } from '../../shared/components/loading.component';
                   </span>
                   <span *ngIf="cartService.isLoading()">Agregando...</span>
                 </button>
-                
-                <button 
+
+                <button
                   (click)="goBack()"
                   class="btn btn-secondary btn-large"
                 >
@@ -526,7 +526,7 @@ export class VehicleDetailComponent implements OnInit {
       switchMap(params => {
         const type = params['type'] as 'vehicle' | 'starship';
         const id = params['id'];
-        
+
         if (!type || !id || (type !== 'vehicle' && type !== 'starship')) {
           this._error.set('Parámetros de vehículo inválidos');
           this._isLoading.set(false);
@@ -589,12 +589,12 @@ export class VehicleDetailComponent implements OnInit {
     if (price === 'unknown' || !price) {
       return '10,000 créditos';
     }
-    
+
     const numericPrice = parseInt(price.replace(/,/g, ''), 10);
     if (isNaN(numericPrice)) {
       return '10,000 créditos';
     }
-    
+
     return `${numericPrice.toLocaleString()} créditos`;
   }
 

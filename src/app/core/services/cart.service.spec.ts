@@ -4,7 +4,7 @@ import { VehicleWithId } from '../models/star-wars.interface';
 
 describe('CartService', () => {
   let service: CartService;
-  
+
   const mockVehicle: VehicleWithId = {
     id: '4',
     type: 'vehicle',
@@ -31,7 +31,7 @@ describe('CartService', () => {
       providers: [CartService]
     });
     service = TestBed.inject(CartService);
-    
+
     // Clear localStorage before each test
     localStorage.clear();
   });
@@ -53,7 +53,7 @@ describe('CartService', () => {
 
   it('should add item to cart', () => {
     service.addToCart(mockVehicle);
-    
+
     expect(service.cartItems().length).toBe(1);
     expect(service.cartItems()[0].vehicle.id).toBe('4');
     expect(service.cartItems()[0].quantity).toBe(1);
@@ -64,7 +64,7 @@ describe('CartService', () => {
   it('should increase quantity when adding existing item', () => {
     service.addToCart(mockVehicle);
     service.addToCart(mockVehicle);
-    
+
     expect(service.cartItems().length).toBe(1);
     expect(service.cartItems()[0].quantity).toBe(2);
     expect(service.itemCount()).toBe(2);
@@ -73,7 +73,7 @@ describe('CartService', () => {
   it('should remove item from cart', () => {
     service.addToCart(mockVehicle);
     expect(service.cartItems().length).toBe(1);
-    
+
     service.removeFromCart('4', 'vehicle');
     expect(service.cartItems().length).toBe(0);
     expect(service.isEmpty()).toBe(true);
@@ -82,7 +82,7 @@ describe('CartService', () => {
   it('should update item quantity', () => {
     service.addToCart(mockVehicle);
     service.updateQuantity('4', 'vehicle', 3);
-    
+
     expect(service.cartItems()[0].quantity).toBe(3);
     expect(service.itemCount()).toBe(3);
   });
@@ -90,7 +90,7 @@ describe('CartService', () => {
   it('should remove item when quantity is set to 0', () => {
     service.addToCart(mockVehicle);
     service.updateQuantity('4', 'vehicle', 0);
-    
+
     expect(service.cartItems().length).toBe(0);
     expect(service.isEmpty()).toBe(true);
   });
@@ -98,7 +98,7 @@ describe('CartService', () => {
   it('should clear cart', () => {
     service.addToCart(mockVehicle);
     expect(service.cartItems().length).toBe(1);
-    
+
     service.clearCart();
     expect(service.cartItems().length).toBe(0);
     expect(service.isEmpty()).toBe(true);
@@ -106,14 +106,14 @@ describe('CartService', () => {
 
   it('should check if item is in cart', () => {
     expect(service.isInCart('4', 'vehicle')).toBe(false);
-    
+
     service.addToCart(mockVehicle);
     expect(service.isInCart('4', 'vehicle')).toBe(true);
   });
 
   it('should get item quantity', () => {
     expect(service.getItemQuantity('4', 'vehicle')).toBe(0);
-    
+
     service.addToCart(mockVehicle, 3);
     expect(service.getItemQuantity('4', 'vehicle')).toBe(3);
   });

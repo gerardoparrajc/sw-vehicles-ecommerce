@@ -40,7 +40,7 @@ describe('HeaderComponent', () => {
   it('should display navigation links', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const navLinks = compiled.querySelectorAll('.nav-link');
-    
+
     expect(navLinks.length).toBeGreaterThan(0);
     expect(compiled.textContent).toContain('Vehículos');
     expect(compiled.textContent).toContain('Naves Espaciales');
@@ -50,7 +50,7 @@ describe('HeaderComponent', () => {
   it('should not show cart count when cart is empty', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const cartCount = compiled.querySelector('.cart-count');
-    
+
     expect(cartCount).toBeFalsy();
   });
 
@@ -61,7 +61,7 @@ describe('HeaderComponent', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     const cartCount = compiled.querySelector('.cart-count');
-    
+
     expect(cartCount).toBeTruthy();
     expect(cartCount?.textContent?.trim()).toBe('3');
   });

@@ -20,21 +20,21 @@ import { LoadingComponent } from '../../shared/components/loading.component';
 
       <div class="filters-section">
         <div class="filter-controls">
-          <button 
+          <button
             (click)="setFilter('all')"
             [class.active]="currentFilter() === 'all'"
             class="filter-btn"
           >
             Todos ({{ allVehicles().length }})
           </button>
-          <button 
+          <button
             (click)="setFilter('vehicle')"
             [class.active]="currentFilter() === 'vehicle'"
             class="filter-btn"
           >
             Vehículos ({{ vehicleCount() }})
           </button>
-          <button 
+          <button
             (click)="setFilter('starship')"
             [class.active]="currentFilter() === 'starship'"
             class="filter-btn"
@@ -44,7 +44,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
         </div>
 
         <div class="search-section">
-          <input 
+          <input
             type="text"
             placeholder="Buscar vehículos..."
             class="search-input"
@@ -55,8 +55,8 @@ import { LoadingComponent } from '../../shared/components/loading.component';
       </div>
 
       <div class="content-section">
-        <app-loading 
-          *ngIf="isLoading()" 
+        <app-loading
+          *ngIf="isLoading()"
           message="Cargando vehículos de Star Wars..."
         />
 
@@ -78,8 +78,8 @@ import { LoadingComponent } from '../../shared/components/loading.component';
           </p>
         </div>
 
-        <div 
-          *ngIf="!isLoading() && !error() && filteredVehicles().length > 0" 
+        <div
+          *ngIf="!isLoading() && !error() && filteredVehicles().length > 0"
           class="vehicles-grid"
         >
           <app-vehicle-card
@@ -299,17 +299,17 @@ export class VehiclesListComponent implements OnInit {
   readonly searchTerm = this._searchTerm.asReadonly();
 
   // Computed signals
-  readonly vehicleCount = computed(() => 
+  readonly vehicleCount = computed(() =>
     this._allVehicles().filter(v => v.type === 'vehicle').length
   );
 
-  readonly starshipCount = computed(() => 
+  readonly starshipCount = computed(() =>
     this._allVehicles().filter(v => v.type === 'starship').length
   );
 
   readonly filteredVehicles = computed(() => {
     let vehicles = this._allVehicles();
-    
+
     // Filtrar por tipo
     if (this._currentFilter() !== 'all') {
       vehicles = vehicles.filter(v => v.type === this._currentFilter());
@@ -318,7 +318,7 @@ export class VehiclesListComponent implements OnInit {
     // Filtrar por búsqueda
     const search = this._searchTerm().toLowerCase().trim();
     if (search) {
-      vehicles = vehicles.filter(v => 
+      vehicles = vehicles.filter(v =>
         v.name.toLowerCase().includes(search) ||
         v.model.toLowerCase().includes(search) ||
         v.manufacturer.toLowerCase().includes(search)
