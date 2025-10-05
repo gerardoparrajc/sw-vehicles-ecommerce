@@ -25,16 +25,8 @@ describe('Star Wars Vehicles E-commerce', () => {
     cy.url().should('include', '/cart');
   });
 
-  it('should be accessible (optional)', () => {
-    // Solo ejecuta las pruebas de accesibilidad si los comandos existen (cypress-axe instalado y cargado)
-    cy.then(() => {
-      const axeAvailable = typeof (cy as any).injectAxe === 'function' && typeof (cy as any).checkA11y === 'function';
-      if (!axeAvailable) {
-        cy.log('Accesibilidad omitida: instala cypress-axe para habilitar (npm i -D cypress-axe axe-core)');
-        return;
-      }
-      (cy as any).injectAxe();
-      (cy as any).checkA11y();
-    });
+  it('should be accessible (critical/serious)', () => {
+    cy.ensureAxe();
+    cy.checkA11yCritical();
   });
 });
