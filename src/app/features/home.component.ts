@@ -518,13 +518,13 @@ export class HomeComponent implements OnInit {
     this._error.set(null);
 
     this.starWarsService.getAllVehicles().subscribe({
-      next: (vehicles) => {
+      next: (vehicles: VehicleWithId[]) => {
         // Tomar los primeros 3 vehículos como destacados
         const featured = vehicles.slice(0, 3);
         this._featuredVehicles.set(featured);
         this._isLoading.set(false);
       },
-      error: (error) => {
+      error: (error: unknown) => {
         console.error('Error loading featured vehicles:', error);
         this._error.set('No se pudieron cargar los vehículos destacados.');
         this._isLoading.set(false);

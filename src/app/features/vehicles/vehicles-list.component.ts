@@ -300,11 +300,11 @@ export class VehiclesListComponent implements OnInit {
 
   // Computed signals
   readonly vehicleCount = computed(() =>
-    this._allVehicles().filter(v => v.type === 'vehicle').length
+    this._allVehicles().filter((v: VehicleWithId) => v.type === 'vehicle').length
   );
 
   readonly starshipCount = computed(() =>
-    this._allVehicles().filter(v => v.type === 'starship').length
+    this._allVehicles().filter((v: VehicleWithId) => v.type === 'starship').length
   );
 
   readonly filteredVehicles = computed(() => {
@@ -312,13 +312,13 @@ export class VehiclesListComponent implements OnInit {
 
     // Filtrar por tipo
     if (this._currentFilter() !== 'all') {
-      vehicles = vehicles.filter(v => v.type === this._currentFilter());
+      vehicles = vehicles.filter((v: VehicleWithId) => v.type === this._currentFilter());
     }
 
     // Filtrar por búsqueda
     const search = this._searchTerm().toLowerCase().trim();
     if (search) {
-      vehicles = vehicles.filter(v =>
+      vehicles = vehicles.filter((v: VehicleWithId) =>
         v.name.toLowerCase().includes(search) ||
         v.model.toLowerCase().includes(search) ||
         v.manufacturer.toLowerCase().includes(search)
@@ -337,11 +337,11 @@ export class VehiclesListComponent implements OnInit {
     this._error.set(null);
 
     this.starWarsService.getAllVehicles().subscribe({
-      next: (vehicles) => {
+      next: (vehicles: VehicleWithId[]) => {
         this._allVehicles.set(vehicles);
         this._isLoading.set(false);
       },
-      error: (error) => {
+      error: (error: unknown) => {
         console.error('Error loading vehicles:', error);
         this._error.set('No se pudieron cargar los vehículos. Por favor, inténtalo de nuevo.');
         this._isLoading.set(false);

@@ -19,7 +19,7 @@ export class StarWarsApiService {
   getVehicles(page: number = 1): Observable<SWAPIResponse<Vehicle>> {
     return this.http.get<SWAPIResponse<Vehicle>>(`${this.baseUrl}/vehicles/?page=${page}`)
       .pipe(
-        catchError(error => {
+        catchError((error: unknown) => {
           console.error('Error fetching vehicles:', error);
           return of({ count: 0, next: null, previous: null, results: [] });
         })
@@ -29,7 +29,7 @@ export class StarWarsApiService {
   getStarships(page: number = 1): Observable<SWAPIResponse<Starship>> {
     return this.http.get<SWAPIResponse<Starship>>(`${this.baseUrl}/starships/?page=${page}`)
       .pipe(
-        catchError(error => {
+        catchError((error: unknown) => {
           console.error('Error fetching starships:', error);
           return of({ count: 0, next: null, previous: null, results: [] });
         })
@@ -41,8 +41,8 @@ export class StarWarsApiService {
       this.getVehicles(),
       this.getStarships()
     ]).pipe(
-      map(([vehiclesResponse, starshipsResponse]) => {
-        const vehicles: VehicleWithId[] = vehiclesResponse.results.map(vehicle => ({
+      map(([vehiclesResponse, starshipsResponse]: [SWAPIResponse<Vehicle>, SWAPIResponse<Starship>]) => {
+        const vehicles: VehicleWithId[] = vehiclesResponse.results.map((vehicle: Vehicle) => ({
           ...vehicle,
           id: this.extractIdFromUrl(vehicle.url),
           type: 'vehicle' as const,
@@ -50,7 +50,7 @@ export class StarWarsApiService {
           vehicle_class: vehicle.vehicle_class
         }));
 
-        const starships: VehicleWithId[] = starshipsResponse.results.map(starship => ({
+        const starships: VehicleWithId[] = starshipsResponse.results.map((starship: Starship) => ({
           ...starship,
           id: this.extractIdFromUrl(starship.url),
           type: 'starship' as const,
@@ -62,7 +62,7 @@ export class StarWarsApiService {
 
         return [...vehicles, ...starships];
       }),
-      catchError(error => {
+      catchError((error: unknown) => {
         console.error('Error fetching all vehicles:', error);
         return of([]);
       })
@@ -75,7 +75,7 @@ export class StarWarsApiService {
       `${this.baseUrl}/starships/${id}/`;
 
     return this.http.get<Vehicle | Starship>(url).pipe(
-      map(vehicle => ({
+      map((vehicle: Vehicle | Starship) => ({
         ...vehicle,
         id,
         type,
@@ -87,7 +87,7 @@ export class StarWarsApiService {
           starship_class: (vehicle as Starship).starship_class
         })
       })),
-      catchError(error => {
+      catchError((error: unknown) => {
         console.error(`Error fetching ${type} with id ${id}:`, error);
         return of(null);
       })
@@ -96,7 +96,7 @@ export class StarWarsApiService {
 
   getFilm(url: string): Observable<Film | null> {
     return this.http.get<Film>(url).pipe(
-      catchError(error => {
+      catchError((error: unknown) => {
         console.error('Error fetching film:', error);
         return of(null);
       })

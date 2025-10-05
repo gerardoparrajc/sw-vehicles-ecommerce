@@ -18,12 +18,12 @@ export class CartService {
 
   readonly cart = computed<Cart>(() => {
     const items = this._cartItems();
-    const total = items.reduce((sum, item) => {
+    const total = items.reduce((sum: number, item: CartItem) => {
       const price = this.getVehiclePrice(item.vehicle);
       return sum + (price * item.quantity);
     }, 0);
 
-    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    const itemCount = items.reduce((sum: number, item: CartItem) => sum + item.quantity, 0);
 
     return {
       items,
@@ -54,7 +54,7 @@ export class CartService {
 
       const currentItems = this._cartItems();
       const existingItemIndex = currentItems.findIndex(
-        item => item.vehicle.id === vehicle.id && item.vehicle.type === vehicle.type
+        (item: CartItem) => item.vehicle.id === vehicle.id && item.vehicle.type === vehicle.type
       );
 
       if (existingItemIndex >= 0) {
@@ -88,7 +88,7 @@ export class CartService {
       this._error.set(null);
 
       const updatedItems = this._cartItems().filter(
-        item => !(item.vehicle.id === vehicleId && item.vehicle.type === vehicleType)
+        (item: CartItem) => !(item.vehicle.id === vehicleId && item.vehicle.type === vehicleType)
       );
       this._cartItems.set(updatedItems);
     } catch (error) {
@@ -110,7 +110,7 @@ export class CartService {
       this._error.set(null);
 
       const currentItems = this._cartItems();
-      const updatedItems = currentItems.map(item => {
+      const updatedItems = currentItems.map((item: CartItem) => {
         if (item.vehicle.id === vehicleId && item.vehicle.type === vehicleType) {
           return { ...item, quantity };
         }
@@ -141,13 +141,13 @@ export class CartService {
 
   isInCart(vehicleId: string, vehicleType: 'vehicle' | 'starship'): boolean {
     return this._cartItems().some(
-      item => item.vehicle.id === vehicleId && item.vehicle.type === vehicleType
+      (item: CartItem) => item.vehicle.id === vehicleId && item.vehicle.type === vehicleType
     );
   }
 
   getItemQuantity(vehicleId: string, vehicleType: 'vehicle' | 'starship'): number {
     const item = this._cartItems().find(
-      item => item.vehicle.id === vehicleId && item.vehicle.type === vehicleType
+      (item: CartItem) => item.vehicle.id === vehicleId && item.vehicle.type === vehicleType
     );
     return item?.quantity || 0;
   }

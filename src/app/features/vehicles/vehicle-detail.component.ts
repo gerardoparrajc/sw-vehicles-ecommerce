@@ -523,7 +523,7 @@ export class VehicleDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.pipe(
-      switchMap(params => {
+      switchMap((params: any) => {
         const type = params['type'] as 'vehicle' | 'starship';
         const id = params['id'];
 
@@ -538,7 +538,7 @@ export class VehicleDetailComponent implements OnInit {
         return this.starWarsService.getVehicleById(id, type);
       })
     ).subscribe({
-      next: (vehicle) => {
+      next: (vehicle: VehicleWithId | null) => {
         if (vehicle) {
           this._vehicle.set(vehicle);
         } else {
@@ -546,7 +546,7 @@ export class VehicleDetailComponent implements OnInit {
         }
         this._isLoading.set(false);
       },
-      error: (error) => {
+      error: (error: unknown) => {
         console.error('Error loading vehicle detail:', error);
         this._error.set('Error al cargar los detalles del vehículo');
         this._isLoading.set(false);
