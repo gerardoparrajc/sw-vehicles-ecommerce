@@ -10,7 +10,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
   standalone: true,
   imports: [CommonModule, VehicleCardComponent, LoadingComponent],
   template: `
-    <div class="vehicles-container">
+  <div class="vehicles-container" data-cy="vehicles-page">
       <div class="page-header">
         <h1 class="page-title">Vehículos de Star Wars</h1>
         <p class="page-subtitle">
@@ -24,6 +24,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
             (click)="setFilter('all')"
             [class.active]="currentFilter() === 'all'"
             class="filter-btn"
+            data-cy="filter-all"
           >
             Todos ({{ allVehicles().length }})
           </button>
@@ -31,6 +32,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
             (click)="setFilter('vehicle')"
             [class.active]="currentFilter() === 'vehicle'"
             class="filter-btn"
+            data-cy="filter-vehicle"
           >
             Vehículos ({{ vehicleCount() }})
           </button>
@@ -38,6 +40,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
             (click)="setFilter('starship')"
             [class.active]="currentFilter() === 'starship'"
             class="filter-btn"
+            data-cy="filter-starship"
           >
             Naves Espaciales ({{ starshipCount() }})
           </button>
@@ -50,6 +53,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
             class="search-input"
             [value]="searchTerm()"
             (input)="onSearchChange($event)"
+            data-cy="search-input"
           />
         </div>
       </div>
@@ -60,7 +64,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
           message="Cargando vehículos de Star Wars..."
         />
 
-        <div *ngIf="error()" class="error-message">
+  <div *ngIf="error()" class="error-message" data-cy="error-message">
           <h3>Error al cargar los vehículos</h3>
           <p>{{ error() }}</p>
           <button (click)="loadVehicles()" class="retry-btn">
@@ -68,7 +72,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
           </button>
         </div>
 
-        <div *ngIf="!isLoading() && !error() && filteredVehicles().length === 0" class="no-results">
+  <div *ngIf="!isLoading() && !error() && filteredVehicles().length === 0" class="no-results" data-cy="no-results">
           <h3>No se encontraron vehículos</h3>
           <p *ngIf="searchTerm()">
             No hay vehículos que coincidan con "{{ searchTerm() }}"
@@ -81,6 +85,7 @@ import { LoadingComponent } from '../../shared/components/loading.component';
         <div
           *ngIf="!isLoading() && !error() && filteredVehicles().length > 0"
           class="vehicles-grid"
+          data-cy="vehicles-grid"
         >
           <app-vehicle-card
             *ngFor="let vehicle of filteredVehicles(); trackBy: trackByVehicle"

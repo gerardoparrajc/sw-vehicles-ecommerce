@@ -8,25 +8,26 @@ import { CartService } from '../../core/services/cart.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <header class="header">
+    <header class="header" data-cy="header">
       <nav class="navbar">
         <div class="nav-brand">
-          <a routerLink="/" class="brand-link">
+          <a routerLink="/" class="brand-link" data-cy="home-link">
             <span class="brand-text">SW Vehicles</span>
           </a>
         </div>
 
         <div class="nav-menu">
-          <a routerLink="/vehicles" routerLinkActive="active" class="nav-link">
+          <a routerLink="/vehicles" routerLinkActive="active" class="nav-link" data-cy="vehicles-link">
             Vehículos
           </a>
-          <a routerLink="/starships" routerLinkActive="active" class="nav-link">
+            <!-- Placeholder para futura ruta starships -->
+          <a routerLink="/starships" routerLinkActive="active" class="nav-link" data-cy="starships-link">
             Naves Espaciales
           </a>
-          <a routerLink="/cart" routerLinkActive="active" class="nav-link cart-link">
+          <a routerLink="/cart" routerLinkActive="active" class="nav-link cart-link" data-cy="cart-link">
             <span class="cart-icon">🛒</span>
             <span class="cart-text">Carrito</span>
-            <span class="cart-count" *ngIf="cartService.itemCount() > 0">
+            <span class="cart-count" *ngIf="cartService.itemCount() > 0" data-cy="cart-count">
               {{ cartService.itemCount() }}
             </span>
           </a>

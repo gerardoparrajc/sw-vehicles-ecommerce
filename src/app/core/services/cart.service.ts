@@ -1,4 +1,5 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, signal, computed, effect, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CartItem, Cart } from '../models/cart.interface';
 import { VehicleWithId } from '../models/star-wars.interface';
 
@@ -35,6 +36,8 @@ export class CartService {
   readonly isEmpty = computed(() => this._cartItems().length === 0);
   readonly totalPrice = computed(() => this.cart().total);
   readonly itemCount = computed(() => this.cart().itemCount);
+
+  private readonly platformId = inject(PLATFORM_ID);
 
   constructor() {
     // Cargar carrito desde localStorage al inicializar
@@ -161,14 +164,19 @@ export class CartService {
   }
 
   private saveCartToStorage(items: CartItem[]): void {
+    if (!this.isBrowser()) return; // Evitar SSR
     try {
       localStorage.setItem('sw-cart', JSON.stringify(items));
     } catch (error) {
-      console.error('Error saving cart to storage:', error);
+      // Silenciar en SSR u otros contextos restringidos
+      if (this.isBrowser()) {
+        console.error('Error saving cart to storage:', error);
+      }
     }
   }
 
   private loadCartFromStorage(): void {
+    if (!this.isBrowser()) return; // Evitar SSR
     try {
       const stored = localStorage.getItem('sw-cart');
       if (stored) {
@@ -181,8 +189,14 @@ export class CartService {
         this._cartItems.set(itemsWithDates);
       }
     } catch (error) {
-      console.error('Error loading cart from storage:', error);
+      if (this.isBrowser()) {
+        console.error('Error loading cart from storage:', error);
+      }
       this._cartItems.set([]);
     }
+  }
+
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId) && typeof localStorage !== 'undefined';
   }
 }

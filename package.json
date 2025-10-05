@@ -12,6 +12,8 @@
     "test:coverage": "jest --coverage",
     "e2e": "cypress run",
     "e2e:open": "cypress open",
+    "e2e:headless": "cypress run --browser electron",
+    "e2e:full": "start-server-and-test start http://localhost:4200 e2e:headless",
     "lint": "ng lint",
     "serve:ssr": "node dist/sw-vehicles-ecommerce/server/server.mjs",
     "serve:ssr:sw-vehicles-ecommerce": "node dist/sw-vehicles-ecommerce/server/server.mjs"
@@ -66,6 +68,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "start-server-and-test": "^2.1.2",
     "ts-jest": "^29.4.4",
     "typescript": "~5.9.2"
   }

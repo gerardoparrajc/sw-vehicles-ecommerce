@@ -9,7 +9,7 @@ import { CartService } from '../../core/services/cart.service';
   standalone: true,
   imports: [CommonModule, RouterModule, NgOptimizedImage],
   template: `
-    <div class="vehicle-card">
+  <div class="vehicle-card" data-cy="vehicle-card">
       <div class="card-image">
         <img
           ngSrc="{{ vehicle.image }}"
@@ -55,6 +55,7 @@ import { CartService } from '../../core/services/cart.service';
             [routerLink]="['/vehicle', vehicle.type, vehicle.id]"
             class="btn btn-secondary"
             aria-label="Ver detalles de {{ vehicle.name }}"
+            data-cy="view-details-btn"
           >
             Ver Detalles
           </button>
@@ -65,6 +66,7 @@ import { CartService } from '../../core/services/cart.service';
             class="btn btn-primary"
             [class.loading]="cartService.isLoading()"
             aria-label="Agregar {{ vehicle.name }} al carrito"
+            data-cy="add-to-cart-btn"
           >
             <span *ngIf="!cartService.isLoading()">
               {{ isInCart() ? 'En Carrito ✓' : 'Agregar al Carrito' }}
