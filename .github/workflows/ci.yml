@@ -15,9 +15,6 @@ jobs:
     name: Build, Unit & E2E
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    defaults:
-      run:
-        working-directory: sw-vehicles-ecommerce
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,14 +46,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: sw-vehicles-ecommerce/dist/
+          path: dist/
 
       - name: Upload coverage (if generated)
-        if: success() && hashFiles('sw-vehicles-ecommerce/coverage/**') != ''
+        if: success() && hashFiles('coverage/**') != ''
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: sw-vehicles-ecommerce/coverage/
+          path: coverage/
 
   # Ejemplo de job separado para futuras auditorías de rendimiento
   # perf-audit:
