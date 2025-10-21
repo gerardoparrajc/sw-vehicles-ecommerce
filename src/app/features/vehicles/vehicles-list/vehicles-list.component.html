@@ -14,7 +14,7 @@
         class="filter-btn"
         data-cy="filter-all"
       >
-        Todos ({{ allVehicles().length }})
+        Todos ({{ vehicleCount() + starshipCount() }})
       </button>
       <button
         (click)="setFilter('vehicle')"
@@ -47,36 +47,47 @@
   </div>
 
   <div class="content-section">
-    <app-loading *ngIf="isLoading()" message="Cargando vehículos de Star Wars..." />
 
-    <div *ngIf="error()" class="error-message" data-cy="error-message">
-      <h3>Error al cargar los vehículos</h3>
-      <p>{{ error() }}</p>
-      <button (click)="loadVehicles()" class="retry-btn">Reintentar</button>
-    </div>
+    @if(allVehicles().status === 'loading') {
+      <app-loading message="Cargando vehículos de Star Wars..." />
+    }
 
-    <div
-      *ngIf="!isLoading() && !error() && filteredVehicles().length === 0"
-      class="no-results"
-      data-cy="no-results"
-    >
-      <h3>No se encontraron vehículos</h3>
-      <p *ngIf="searchTerm()">No hay vehículos que coincidan con "{{ searchTerm() }}"</p>
-      <p *ngIf="!searchTerm() && currentFilter() !== 'all'">
-        No hay vehículos de tipo "{{ currentFilter() }}"
-      </p>
-    </div>
+    @if (allVehicles().status === 'error') {
+      <div class="error-message" data-cy="error-message">
+        <h3>Error al cargar los vehículos</h3>
+        <p>{{ allVehicles().error }}</p>
+        <button (click)="loadVehicles()" class="retry-btn">Reintentar</button>
+      </div>
+    }
 
-    <div
-      *ngIf="!isLoading() && !error() && filteredVehicles().length > 0"
-      class="vehicles-grid"
-      data-cy="vehicles-grid"
-    >
-      <app-vehicle-card
-        *ngFor="let vehicle of filteredVehicles(); trackBy: trackByVehicle"
-        [vehicle]="vehicle"
-        (addToCartClick)="onAddToCart($event)"
-      />
-    </div>
+    @if (allVehicles().status === 'resolved' && filteredVehicles().length === 0) {
+      <div
+        class="no-results"
+        data-cy="no-results"
+      >
+        <h3>No se encontraron vehículos</h3>
+
+        @if (searchTerm()) {
+          <p>No hay vehículos que coincidan con "{{ searchTerm() }}"</p>
+        }
+
+        @if (!searchTerm() && currentFilter() !== 'all') {
+          <p>No hay vehículos de tipo "{{ currentFilter() }}"</p>
+        }
+      </div>
+    }
+
+    @if (allVehicles().status === 'resolved' && filteredVehicles().length > 0) {
+      <div
+        class="vehicles-grid"
+        data-cy="vehicles-grid"
+      >
+        <app-vehicle-card
+          *ngFor="let vehicle of filteredVehicles(); trackBy: trackByVehicle"
+          [vehicle]="vehicle"
+          (addToCartClick)="onAddToCart($event)"
+        />
+      </div>
+    }
   </div>
 </div>

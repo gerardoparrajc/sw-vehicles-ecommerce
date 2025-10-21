@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StarWarsApiService } from '../../core/services/star-wars-api.service';
@@ -16,37 +16,18 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 export class HomeComponent implements OnInit {
   private readonly starWarsService = inject(StarWarsApiService);
 
-  // Signals
-  private readonly _featuredVehicles = signal<VehicleWithId[]>([]);
-  private readonly _isLoading = signal(true);
-  private readonly _error = signal<string | null>(null);
-
   // Public readonly signals
-  readonly featuredVehicles = this._featuredVehicles.asReadonly();
-  readonly isLoading = this._isLoading.asReadonly();
-  readonly error = this._error.asReadonly();
+  readonly featuredVehicles = this.starWarsService.allVehicles;
+  readonly isLoading = computed(() => this.featuredVehicles().status === 'loading');
+  readonly error = computed(() => this.featuredVehicles().status === 'error' ? this.featuredVehicles().error : null);
 
   ngOnInit(): void {
     this.loadFeaturedVehicles();
   }
 
   loadFeaturedVehicles(): void {
-    this._isLoading.set(true);
-    this._error.set(null);
-
-    this.starWarsService.getAllVehicles().subscribe({
-      next: (vehicles: VehicleWithId[]) => {
-        // Tomar los primeros 3 vehículos como destacados
-        const featured = vehicles.slice(0, 3);
-        this._featuredVehicles.set(featured);
-        this._isLoading.set(false);
-      },
-      error: (error: unknown) => {
-        console.error('Error loading featured vehicles:', error);
-        this._error.set('No se pudieron cargar los vehículos destacados.');
-        this._isLoading.set(false);
-      }
-    });
+    this.starWarsService.vehicles.reload();
+    this.starWarsService.starships.reload();
   }
 
   onAddToCart(vehicle: VehicleWithId): void {

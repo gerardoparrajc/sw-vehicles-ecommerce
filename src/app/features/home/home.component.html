@@ -59,23 +59,28 @@
       <p class="section-subtitle">Los más populares de la galaxia</p>
     </div>
 
-    <app-loading *ngIf="isLoading()" message="Cargando vehículos destacados..." />
+    @if (isLoading()) {
+      <app-loading message="Cargando vehículos destacados..." />
+    }
 
-    <div *ngIf="error()" class="error-message">
-      <h3>Error al cargar vehículos destacados</h3>
-      <p>{{ error() }}</p>
-    </div>
+    @if (error()) {
+      <div class="error-message">
+        <h3>Error al cargar vehículos destacados</h3>
+        <p>{{ error() }}</p>
+      </div>
+    }
 
-    <div
-      *ngIf="!isLoading() && !error() && featuredVehicles().length > 0"
-      class="featured-vehicles"
-    >
-      <app-vehicle-card
-        *ngFor="let vehicle of featuredVehicles(); trackBy: trackByVehicle"
-        [vehicle]="vehicle"
-        (addToCartClick)="onAddToCart($event)"
-      />
-    </div>
+    @if (!isLoading() && !error() && featuredVehicles().status === 'resolved' && (featuredVehicles().value?.length ?? 0) > 0) {
+      <div class="featured-vehicles">
+
+        @for (vehicle of featuredVehicles().value; track vehicle.id) {
+          <app-vehicle-card
+            [vehicle]="vehicle"
+            (addToCartClick)="onAddToCart($event)"
+          />
+        }
+      </div>
+    }
 
     <div class="view-all-section" *ngIf="!isLoading() && !error()">
       <a routerLink="/vehicles" class="btn btn-outline"> Ver Todos los Vehículos </a>

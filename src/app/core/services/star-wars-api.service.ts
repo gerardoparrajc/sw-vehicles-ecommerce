@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { Observable, forkJoin, map, catchError, of } from 'rxjs';
 import { SWAPIResponse, Vehicle, Starship, VehicleWithId, Film } from '../models/star-wars.interface';
 
@@ -16,58 +16,53 @@ export class StarWarsApiService {
     starship: 'https://placehold.co/400x300/1a1a1a/ffffff?text=Starship'
   };
 
-  getVehicles(page: number = 1): Observable<SWAPIResponse<Vehicle>> {
-    return this.http.get<SWAPIResponse<Vehicle>>(`${this.baseUrl}/vehicles/?page=${page}`)
-      .pipe(
-        catchError((error: unknown) => {
-          console.error('Error fetching vehicles:', error);
-          return of({ count: 0, next: null, previous: null, results: [] });
-        })
-      );
+  private _page = signal<number>(1);
+  public readonly page = this._page.asReadonly();
+
+  setPage(page: number): void {
+    this._page.set(page);
   }
 
-  getStarships(page: number = 1): Observable<SWAPIResponse<Starship>> {
-    return this.http.get<SWAPIResponse<Starship>>(`${this.baseUrl}/starships/?page=${page}`)
-      .pipe(
-        catchError((error: unknown) => {
-          console.error('Error fetching starships:', error);
-          return of({ count: 0, next: null, previous: null, results: [] });
-        })
-      );
-  }
+  public readonly vehicles = httpResource<SWAPIResponse<Vehicle>>(() => `${this.baseUrl}/vehicles/?page=${this._page()}`);
+  public readonly starships = httpResource<SWAPIResponse<Starship>>(() => `${this.baseUrl}/starships/?page=${this._page()}`);
 
-  getAllVehicles(): Observable<VehicleWithId[]> {
-    return forkJoin([
-      this.getVehicles(),
-      this.getStarships()
-    ]).pipe(
-      map(([vehiclesResponse, starshipsResponse]: [SWAPIResponse<Vehicle>, SWAPIResponse<Starship>]) => {
-        const vehicles: VehicleWithId[] = vehiclesResponse.results.map((vehicle: Vehicle) => ({
-          ...vehicle,
-          id: this.extractIdFromUrl(vehicle.url),
-          type: 'vehicle' as const,
-          image: this.getVehicleImage(vehicle.name, 'vehicle'),
-          vehicle_class: vehicle.vehicle_class
-        }));
+  public readonly allVehicles = computed(() => {
 
-        const starships: VehicleWithId[] = starshipsResponse.results.map((starship: Starship) => ({
-          ...starship,
-          id: this.extractIdFromUrl(starship.url),
-          type: 'starship' as const,
-          image: this.getVehicleImage(starship.name, 'starship'),
-          hyperdrive_rating: starship.hyperdrive_rating,
-          MGLT: starship.MGLT,
-          starship_class: starship.starship_class
-        }));
+    if (this.vehicles.status() === 'loading' || this.starships.status() === 'loading') {
+      return { status: 'loading' };
+    }
 
-        return [...vehicles, ...starships];
-      }),
-      catchError((error: unknown) => {
-        console.error('Error fetching all vehicles:', error);
-        return of([]);
-      })
-    );
-  }
+    if (this.vehicles.status() === 'error') {
+      return { status: 'error', error: this.vehicles.error() };
+    }
+
+    if (this.starships.status() === 'error') {
+      return { status: 'error', error: this.starships.error() };
+    }
+
+    const vehicles: VehicleWithId[] = this.vehicles.value()?.results.map((vehicle: Vehicle) => ({
+      ...vehicle,
+      id: this.extractIdFromUrl(vehicle.url),
+      type: 'vehicle' as const,
+      image: this.getVehicleImage(vehicle.name, 'vehicle'),
+      vehicle_class: vehicle.vehicle_class
+    })) || [];
+
+    const starships: VehicleWithId[] = this.starships.value()?.results.map((starship: Starship) => ({
+      ...starship,
+      id: this.extractIdFromUrl(starship.url),
+      type: 'starship' as const,
+      image: this.getVehicleImage(starship.name, 'starship'),
+      hyperdrive_rating: starship.hyperdrive_rating,
+      MGLT: starship.MGLT,
+      starship_class: starship.starship_class
+    })) || [];
+
+    return {
+      status: 'resolved',
+      value: [...vehicles, ...starships]
+    };
+  });
 
   getVehicleById(id: string, type: 'vehicle' | 'starship'): Observable<VehicleWithId | null> {
     const url = type === 'vehicle' ?
