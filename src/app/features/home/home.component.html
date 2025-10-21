@@ -1,0 +1,106 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Vehículos de <span class="highlight">Star Wars</span></h1>
+      <p class="hero-subtitle">
+        Explora la galaxia más lejana con nuestra colección exclusiva de vehículos y naves
+        espaciales
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/vehicles" class="btn btn-primary btn-large"> Explorar Catálogo </a>
+        <a routerLink="/cart" class="btn btn-secondary btn-large"> Ver Carrito </a>
+      </div>
+    </div>
+    <div class="hero-background">
+      <div class="stars"></div>
+      <div class="floating-vehicles">
+        <div class="vehicle-icon">🚀</div>
+        <div class="vehicle-icon">🛸</div>
+        <div class="vehicle-icon">🚁</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="section-header">
+      <h2 class="section-title">¿Por qué elegir nuestros vehículos?</h2>
+      <p class="section-subtitle">Calidad galáctica garantizada</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Entrega Rápida</h3>
+        <p class="feature-description">Entrega en menos de 12 parsecs a cualquier sistema solar</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3 class="feature-title">Garantía Imperial</h3>
+        <p class="feature-description">
+          Todos nuestros vehículos cuentan con garantía del Imperio Galáctico
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💫</div>
+        <h3 class="feature-title">Tecnología Avanzada</h3>
+        <p class="feature-description">Equipados con la más avanzada tecnología de hiperespacio</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Vehicles Section -->
+  <section class="featured-section">
+    <div class="section-header">
+      <h2 class="section-title">Vehículos Destacados</h2>
+      <p class="section-subtitle">Los más populares de la galaxia</p>
+    </div>
+
+    <app-loading *ngIf="isLoading()" message="Cargando vehículos destacados..." />
+
+    <div *ngIf="error()" class="error-message">
+      <h3>Error al cargar vehículos destacados</h3>
+      <p>{{ error() }}</p>
+    </div>
+
+    <div
+      *ngIf="!isLoading() && !error() && featuredVehicles().length > 0"
+      class="featured-vehicles"
+    >
+      <app-vehicle-card
+        *ngFor="let vehicle of featuredVehicles(); trackBy: trackByVehicle"
+        [vehicle]="vehicle"
+        (addToCartClick)="onAddToCart($event)"
+      />
+    </div>
+
+    <div class="view-all-section" *ngIf="!isLoading() && !error()">
+      <a routerLink="/vehicles" class="btn btn-outline"> Ver Todos los Vehículos </a>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Vehículos Disponibles</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">1000+</div>
+        <div class="stat-label">Clientes Satisfechos</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Sistemas Solares</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Soporte Galáctico</div>
+      </div>
+    </div>
+  </section>
+</div>

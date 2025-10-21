@@ -1,0 +1,82 @@
+<div class="vehicles-container" data-cy="vehicles-page">
+  <div class="page-header">
+    <h1 class="page-title">Vehículos de Star Wars</h1>
+    <p class="page-subtitle">
+      Explora nuestra colección de vehículos y naves espaciales del universo de Star Wars
+    </p>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-controls">
+      <button
+        (click)="setFilter('all')"
+        [class.active]="currentFilter() === 'all'"
+        class="filter-btn"
+        data-cy="filter-all"
+      >
+        Todos ({{ allVehicles().length }})
+      </button>
+      <button
+        (click)="setFilter('vehicle')"
+        [class.active]="currentFilter() === 'vehicle'"
+        class="filter-btn"
+        data-cy="filter-vehicle"
+      >
+        Vehículos ({{ vehicleCount() }})
+      </button>
+      <button
+        (click)="setFilter('starship')"
+        [class.active]="currentFilter() === 'starship'"
+        class="filter-btn"
+        data-cy="filter-starship"
+      >
+        Naves Espaciales ({{ starshipCount() }})
+      </button>
+    </div>
+
+    <div class="search-section">
+      <input
+        type="text"
+        placeholder="Buscar vehículos..."
+        class="search-input"
+        [value]="searchTerm()"
+        (input)="onSearchChange($event)"
+        data-cy="search-input"
+      />
+    </div>
+  </div>
+
+  <div class="content-section">
+    <app-loading *ngIf="isLoading()" message="Cargando vehículos de Star Wars..." />
+
+    <div *ngIf="error()" class="error-message" data-cy="error-message">
+      <h3>Error al cargar los vehículos</h3>
+      <p>{{ error() }}</p>
+      <button (click)="loadVehicles()" class="retry-btn">Reintentar</button>
+    </div>
+
+    <div
+      *ngIf="!isLoading() && !error() && filteredVehicles().length === 0"
+      class="no-results"
+      data-cy="no-results"
+    >
+      <h3>No se encontraron vehículos</h3>
+      <p *ngIf="searchTerm()">No hay vehículos que coincidan con "{{ searchTerm() }}"</p>
+      <p *ngIf="!searchTerm() && currentFilter() !== 'all'">
+        No hay vehículos de tipo "{{ currentFilter() }}"
+      </p>
+    </div>
+
+    <div
+      *ngIf="!isLoading() && !error() && filteredVehicles().length > 0"
+      class="vehicles-grid"
+      data-cy="vehicles-grid"
+    >
+      <app-vehicle-card
+        *ngFor="let vehicle of filteredVehicles(); trackBy: trackByVehicle"
+        [vehicle]="vehicle"
+        (addToCartClick)="onAddToCart($event)"
+      />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="vehicle-card" data-cy="vehicle-card">
+  <div class="card-image">
+    <img
+      ngSrc="{{ vehicle.image }}"
+      [alt]="vehicle.name"
+      width="400"
+      height="300"
+      priority="false"
+      class="vehicle-img"
+      (error)="onImageError($event)"
+    />
+    <div class="card-badge" [ngClass]="vehicle.type">
+      {{ vehicle.type === 'starship' ? 'Nave Espacial' : 'Vehículo' }}
+    </div>
+  </div>
+
+  <div class="card-content">
+    <h3 class="card-title">{{ vehicle.name }}</h3>
+    <p class="card-model">{{ vehicle.model }}</p>
+    <p class="card-manufacturer">{{ vehicle.manufacturer }}</p>
+
+    <div class="card-specs">
+      <div class="spec-item">
+        <span class="spec-label">Tripulación:</span>
+        <span class="spec-value">{{ vehicle.crew }}</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Pasajeros:</span>
+        <span class="spec-value">{{ vehicle.passengers }}</span>
+      </div>
+      <div class="spec-item" *ngIf="vehicle.type === 'starship' && vehicle.hyperdrive_rating">
+        <span class="spec-label">Hiperimpulsor:</span>
+        <span class="spec-value">{{ vehicle.hyperdrive_rating }}</span>
+      </div>
+    </div>
+
+    <div class="card-price">
+      <span class="price-label">Precio:</span>
+      <span class="price-value">{{ formatPrice(vehicle.cost_in_credits) }}</span>
+    </div>
+
+    <div class="card-actions">
+      <button
+        [routerLink]="['/vehicle', vehicle.type, vehicle.id]"
+        class="btn btn-secondary"
+        aria-label="Ver detalles de {{ vehicle.name }}"
+        data-cy="view-details-btn"
+      >
+        Ver Detalles
+      </button>
+
+      <button
+        (click)="addToCart()"
+        [disabled]="cartService.isLoading()"
+        class="btn btn-primary"
+        [class.loading]="cartService.isLoading()"
+        aria-label="Agregar {{ vehicle.name }} al carrito"
+        data-cy="add-to-cart-btn"
+      >
+        <span *ngIf="!cartService.isLoading()">
+          {{ isInCart() ? 'En Carrito ✓' : 'Agregar al Carrito' }}
+        </span>
+        <span *ngIf="cartService.isLoading()">Agregando...</span>
+      </button>
+    </div>
+  </div>
+</div>

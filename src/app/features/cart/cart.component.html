@@ -1,0 +1,152 @@
+<div class="cart-container">
+  <div class="page-header">
+    <h1 class="page-title">Carrito de Compras</h1>
+    <p class="page-subtitle">Revisa tus vehículos seleccionados antes de proceder al checkout</p>
+  </div>
+
+  <div class="cart-content">
+    <app-loading *ngIf="cartService.isLoading()" message="Actualizando carrito..." />
+
+    <!-- Carrito vacío -->
+    <div *ngIf="cartService.isEmpty() && !cartService.isLoading()" class="empty-cart">
+      <div class="empty-cart-icon">🛒</div>
+      <h2>Tu carrito está vacío</h2>
+      <p>Explora nuestra colección de vehículos de Star Wars y encuentra tu favorito</p>
+      <a routerLink="/vehicles" class="btn btn-primary"> Explorar Vehículos </a>
+    </div>
+
+    <!-- Items del carrito -->
+    <div *ngIf="!cartService.isEmpty() && !cartService.isLoading()" class="cart-items-section">
+      <div class="cart-items">
+        <div class="cart-item" *ngFor="let item of cartService.cartItems(); trackBy: trackByItem">
+          <div class="item-image">
+            <img
+              ngSrc="{{ item.vehicle.image }}"
+              [alt]="item.vehicle.name"
+              width="120"
+              height="90"
+              class="vehicle-thumbnail"
+              (error)="onImageError($event, item.vehicle)"
+            />
+            <div class="item-badge" [ngClass]="item.vehicle.type">
+              {{ item.vehicle.type === 'starship' ? 'Nave' : 'Vehículo' }}
+            </div>
+          </div>
+
+          <div class="item-details">
+            <h3 class="item-name">{{ item.vehicle.name }}</h3>
+            <p class="item-model">{{ item.vehicle.model }}</p>
+            <p class="item-manufacturer">{{ item.vehicle.manufacturer }}</p>
+            <p class="item-added">Agregado: {{ formatDate(item.addedAt) }}</p>
+          </div>
+
+          <div class="item-price">
+            <span class="unit-price">{{ formatPrice(item.vehicle.cost_in_credits) }}</span>
+            <span class="price-label">por unidad</span>
+          </div>
+
+          <div class="item-quantity">
+            <div class="quantity-controls">
+              <button
+                (click)="decreaseQuantity(item)"
+                [disabled]="cartService.isLoading()"
+                class="quantity-btn"
+                aria-label="Disminuir cantidad"
+              >
+                −
+              </button>
+              <span class="quantity-display">{{ item.quantity }}</span>
+              <button
+                (click)="increaseQuantity(item)"
+                [disabled]="cartService.isLoading()"
+                class="quantity-btn"
+                aria-label="Aumentar cantidad"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="item-total">
+            <span class="total-price">{{
+              formatPrice((getItemPrice(item.vehicle) * item.quantity).toString())
+            }}</span>
+            <span class="total-label">Total</span>
+          </div>
+
+          <div class="item-actions">
+            <button
+              [routerLink]="['/vehicle', item.vehicle.type, item.vehicle.id]"
+              class="btn btn-link"
+              aria-label="Ver detalles de {{ item.vehicle.name }}"
+            >
+              Ver Detalles
+            </button>
+            <button
+              (click)="removeItem(item)"
+              [disabled]="cartService.isLoading()"
+              class="btn btn-danger"
+              aria-label="Eliminar {{ item.vehicle.name }} del carrito"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen del carrito -->
+      <div class="cart-summary">
+        <div class="summary-header">
+          <h2>Resumen del Pedido</h2>
+        </div>
+
+        <div class="summary-details">
+          <div class="summary-row">
+            <span class="summary-label">Artículos ({{ cartService.itemCount() }}):</span>
+            <span class="summary-value">{{
+              formatPrice(cartService.totalPrice().toString())
+            }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span class="summary-label">Envío:</span>
+            <span class="summary-value shipping-free">GRATIS</span>
+          </div>
+
+          <div class="summary-separator"></div>
+
+          <div class="summary-row total-row">
+            <span class="summary-label">Total:</span>
+            <span class="summary-value total-value">{{
+              formatPrice(cartService.totalPrice().toString())
+            }}</span>
+          </div>
+        </div>
+
+        <div class="summary-actions">
+          <button
+            (click)="clearCart()"
+            [disabled]="cartService.isLoading()"
+            class="btn btn-secondary btn-full"
+          >
+            Vaciar Carrito
+          </button>
+
+          <button
+            (click)="proceedToCheckout()"
+            [disabled]="cartService.isLoading()"
+            class="btn btn-primary btn-full"
+          >
+            Proceder al Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="cartService.error()" class="error-message">
+      <h3>Error en el carrito</h3>
+      <p>{{ cartService.error() }}</p>
+    </div>
+  </div>
+</div>

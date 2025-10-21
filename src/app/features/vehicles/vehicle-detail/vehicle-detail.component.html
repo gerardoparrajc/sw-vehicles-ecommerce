@@ -1,0 +1,151 @@
+<div class="vehicle-detail-container">
+  <app-loading *ngIf="isLoading()" message="Cargando detalles del vehículo..." />
+
+  <div *ngIf="error()" class="error-message">
+    <h2>Error al cargar el vehículo</h2>
+    <p>{{ error() }}</p>
+    <button (click)="goBack()" class="btn btn-secondary">Volver</button>
+  </div>
+
+  <div *ngIf="!isLoading() && !error() && vehicle()" class="vehicle-detail">
+    <nav class="breadcrumb">
+      <a routerLink="/vehicles" class="breadcrumb-link">Vehículos</a>
+      <span class="breadcrumb-separator">›</span>
+      <span class="breadcrumb-current">{{ vehicle()?.name }}</span>
+    </nav>
+
+    <div class="detail-content">
+      <div class="image-section">
+        <img
+          ngSrc="{{ vehicle()!.image }}"
+          [alt]="vehicle()!.name"
+          width="600"
+          height="400"
+          priority="true"
+          class="vehicle-image"
+          (error)="onImageError($event)"
+        />
+        <div class="vehicle-badge" [ngClass]="vehicle()!.type">
+          {{ vehicle()!.type === 'starship' ? 'Nave Espacial' : 'Vehículo' }}
+        </div>
+      </div>
+
+      <div class="info-section">
+        <header class="vehicle-header">
+          <h1 class="vehicle-name">{{ vehicle()!.name }}</h1>
+          <p class="vehicle-model">{{ vehicle()!.model }}</p>
+          <p class="vehicle-manufacturer">por {{ vehicle()!.manufacturer }}</p>
+        </header>
+
+        <div class="price-section">
+          <div class="price-display">
+            <span class="price-label">Precio:</span>
+            <span class="price-value">{{ formatPrice(vehicle()!.cost_in_credits) }}</span>
+          </div>
+        </div>
+
+        <div class="specs-section">
+          <h3 class="specs-title">Especificaciones</h3>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">Longitud:</span>
+              <span class="spec-value">{{ vehicle()!.length }} metros</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Velocidad máxima:</span>
+              <span class="spec-value">{{ vehicle()!.max_atmosphering_speed }} km/h</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Tripulación:</span>
+              <span class="spec-value">{{ vehicle()!.crew }}</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Pasajeros:</span>
+              <span class="spec-value">{{ vehicle()!.passengers }}</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Capacidad de carga:</span>
+              <span class="spec-value">{{ vehicle()!.cargo_capacity }} kg</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Consumibles:</span>
+              <span class="spec-value">{{ vehicle()!.consumables }}</span>
+            </div>
+
+            <!-- Specs específicos para starships -->
+            <div
+              *ngIf="vehicle()!.type === 'starship' && vehicle()!.hyperdrive_rating"
+              class="spec-item"
+            >
+              <span class="spec-label">Clasificación hiperimpulsor:</span>
+              <span class="spec-value">{{ vehicle()!.hyperdrive_rating }}</span>
+            </div>
+            <div *ngIf="vehicle()!.type === 'starship' && vehicle()!.MGLT" class="spec-item">
+              <span class="spec-label">MGLT:</span>
+              <span class="spec-value">{{ vehicle()!.MGLT }}</span>
+            </div>
+            <div
+              *ngIf="vehicle()!.type === 'starship' && vehicle()!.starship_class"
+              class="spec-item"
+            >
+              <span class="spec-label">Clase de nave:</span>
+              <span class="spec-value">{{ vehicle()!.starship_class }}</span>
+            </div>
+
+            <!-- Spec específico para vehicles -->
+            <div
+              *ngIf="vehicle()!.type === 'vehicle' && vehicle()!.vehicle_class"
+              class="spec-item"
+            >
+              <span class="spec-label">Clase de vehículo:</span>
+              <span class="spec-value">{{ vehicle()!.vehicle_class }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-section">
+          <div class="quantity-controls" *ngIf="isInCart()">
+            <label class="quantity-label">Cantidad en carrito:</label>
+            <div class="quantity-input-group">
+              <button
+                (click)="decreaseQuantity()"
+                [disabled]="cartService.isLoading()"
+                class="quantity-btn"
+                aria-label="Disminuir cantidad"
+              >
+                −
+              </button>
+              <span class="quantity-display">{{ currentQuantity() }}</span>
+              <button
+                (click)="increaseQuantity()"
+                [disabled]="cartService.isLoading()"
+                class="quantity-btn"
+                aria-label="Aumentar cantidad"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button
+              (click)="addToCart()"
+              [disabled]="cartService.isLoading()"
+              class="btn btn-primary btn-large"
+              [class.loading]="cartService.isLoading()"
+            >
+              <span *ngIf="!cartService.isLoading()">
+                {{ isInCart() ? 'Agregar Más' : 'Agregar al Carrito' }}
+              </span>
+              <span *ngIf="cartService.isLoading()">Agregando...</span>
+            </button>
+
+            <button (click)="goBack()" class="btn btn-secondary btn-large">
+              Volver a la Lista
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
